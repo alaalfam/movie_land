@@ -42,6 +42,8 @@ dependencies:
   go_router: ^16.2.4
   get: ^4.7.2
   cached_network_image: ^3.4.1
+  intl: ^0.20.2
+  percent_indicator: ^4.2.5
 
 dev_dependencies:
   flutter_test:
