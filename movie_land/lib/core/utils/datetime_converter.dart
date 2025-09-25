@@ -11,10 +11,14 @@ class DatetimeConverter {
   }
 
   String convertToHumanReadable(String dateString) {
-    DateTime parsedDate = DateTime.parse(dateString);
+    DateTime? parsedDate = DateTime.tryParse(dateString);
 
     // Format the date in the required format
-    String formattedDate = DateFormat('dd MMM yyyy').format(parsedDate);
-    return formattedDate;
+    if (parsedDate == null) {
+      return dateString;
+    } else {
+      String formattedDate = DateFormat('dd MMM yyyy').format(parsedDate);
+      return formattedDate;
+    }
   }
 }

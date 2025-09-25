@@ -7,4 +7,7 @@ class MovieListRepository {
   MovieListRepository(this._api);
 
   Future<List<MovieModel>> popularMovies(int page) async => _api.popular(page);
+
+  Future<List<MovieModel>> searchMovies(int page, String query) async =>
+      _api.searchMovie(page, query);
 }

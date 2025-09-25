@@ -8,11 +8,13 @@ abstract class MovieListsApi {
   final String popularEndpoint = '3/movie/popular';
   final String topRateEndpoint = '3/movie/top_rate';
   final String upcomingEndpoint = '3/movie/upcoming';
+  final String searchEndpoint = '3/search/movie';
 
   Future<List<MovieModel>> nowPlaying(int page);
   Future<List<MovieModel>> popular(int page);
   Future<List<MovieModel>> topRate(int page);
   Future<List<MovieModel>> upComming(int page);
+  Future<List<MovieModel>> searchMovie(int page, String query);
 }
 
 class MovieListsApiImpl extends MovieListsApi {
@@ -54,5 +56,25 @@ class MovieListsApiImpl extends MovieListsApi {
     return (response['results'] as List)
         .map((json) => MovieModel.fromJson(json))
         .toList();
+  }
+  
+  @override
+  Future<List<MovieModel>> searchMovie(int page, String query) async {
+    try {
+      final response = await coreApi.get(
+        endpoint: searchEndpoint,
+        queryParameters: {
+          'page': page.toString(),
+          'query': query,
+        },
+      );
+      return response['results'] != null
+          ? (response['results'] as List)
+              .map((json) => MovieModel.fromJson(json))
+              .toList()
+          : [];
+    } catch (e) {
+      rethrow;
+    }
   }
 }

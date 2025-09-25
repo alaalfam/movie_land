@@ -10,12 +10,16 @@ class DashboardViewModel extends ChangeNotifier {
   final MovieListRepository movieRepository;
   int pageSize = 20;
   PagingState<int, MovieModel> state = PagingState<int, MovieModel>();
+  String searchQuery = '';
 
   DashboardViewModel({required this.movieRepository});
 
   void initialize() {}
 
-  void refreshPage() {}
+  Future<void> refreshPage() async {
+    state = state.reset();
+    notifyListeners();
+  }
 
   Future<void> fetchNextPage() async {
     try {
@@ -24,7 +28,14 @@ class DashboardViewModel extends ChangeNotifier {
       notifyListeners();
 
       final newKey = (state.keys?.last ?? 0) + 1;
-      final newItems = await movieRepository.popularMovies(newKey);
+      List<MovieModel> newItems = [];
+      if (searchQuery.isNotEmpty) {
+        // Implement search logic here
+        newItems = await movieRepository.searchMovies(newKey, searchQuery);
+      } else {
+        // Fetch popular movies by default
+        newItems = await movieRepository.popularMovies(newKey);
+      }
       final isLastPage = newItems.isEmpty;
 
       state = state.copyWith(
@@ -39,6 +50,11 @@ class DashboardViewModel extends ChangeNotifier {
       state = state.copyWith(isLoading: false, error: e);
       notifyListeners();
     }
+  }
+
+  void onSearchChanged(String query) {
+    searchQuery = query;
+    refreshPage();
   }
 
   @override

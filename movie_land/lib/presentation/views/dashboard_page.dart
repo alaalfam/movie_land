@@ -33,129 +33,169 @@ class _DashboardPage extends StatelessWidget {
     final read = Provider.of<DashboardViewModel>(context, listen: false);
     return Scaffold(
       appBar: AppBar(title: const Text('Movie Land')),
-      body: Consumer<DashboardViewModel>(
-        builder:
-            (context, value, child) => PagedGridView<int, MovieModel>(
-              padding: const EdgeInsets.all(MovieLandDimentions.spaceDefault),
-              state: value.state,
-              fetchNextPage: value.fetchNextPage,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: MovieLandDimentions.spaceDefault,
-                crossAxisSpacing: MovieLandDimentions.spaceDefault,
-                childAspectRatio: 0.45,
-              ),
-              // separatorBuilder:
-              //     (context, index) =>
-              //         SizedBox(height: MovieLandDimentions.spaceDefault),
-              builderDelegate: PagedChildBuilderDelegate<MovieModel>(
-                itemBuilder:
-                    (context, item, index) => Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withValues(alpha: 0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(
-                              0,
-                              3,
-                            ), // changes position of shadow
-                          ),
-                        ],
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(MovieLandDimentions.spaceDefault),
+            child: Consumer<DashboardViewModel>(
+              builder:
+                  (context, viewModel, child) => TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search movies...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(32),
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 2 / 3,
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(8),
-                                    topRight: Radius.circular(8),
+                    ),
+                    onChanged: read.onSearchChanged,
+                  ),
+            ),
+          ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () => read.refreshPage(),
+              child: Consumer<DashboardViewModel>(
+                builder:
+                    (context, value, child) => PagedGridView<int, MovieModel>(
+                      padding: const EdgeInsets.all(
+                        MovieLandDimentions.spaceDefault,
+                      ),
+                      state: value.state,
+                      fetchNextPage: value.fetchNextPage,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: MovieLandDimentions.spaceDefault,
+                            crossAxisSpacing: MovieLandDimentions.spaceDefault,
+                            childAspectRatio: 0.45,
+                          ),
+                      // separatorBuilder:
+                      //     (context, index) =>
+                      //         SizedBox(height: MovieLandDimentions.spaceDefault),
+                      builderDelegate: PagedChildBuilderDelegate<MovieModel>(
+                        itemBuilder:
+                            (context, item, index) => Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withValues(alpha: 0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: const Offset(
+                                      0,
+                                      3,
+                                    ), // changes position of shadow
                                   ),
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        'https://image.tmdb.org/t/p/w220_and_h330_face${item.posterPath}',
-                                    placeholder:
-                                        (context, url) => const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: -25,
-                                  left: 10,
-                                  child: Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: Colors.black,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Center(
-                                      child: CircularPercentIndicator(
-                                        radius: 22,
-                                        lineWidth: 3,
-                                        percent: item.voteAverage / 10,
-                                        center: Text(
-                                          '${(item.voteAverage * 10).toStringAsFixed(0)}%',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12,
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  AspectRatio(
+                                    aspectRatio: 2 / 3,
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(8),
+                                            topRight: Radius.circular(8),
+                                          ),
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                'https://image.tmdb.org/t/p/w220_and_h330_face${item.posterPath}',
+                                            placeholder:
+                                                (context, url) => const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                        progressColor:
-                                            item.voteAverage >= 7
-                                                ? Colors.green
-                                                : item.voteAverage >= 4
-                                                ? Colors.orange
-                                                : Colors.red,
-                                        backgroundColor: Colors.grey.shade800,
+                                        Positioned(
+                                          bottom: -25,
+                                          left: 10,
+                                          child: Container(
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            ),
+                                            child: Center(
+                                              child: CircularPercentIndicator(
+                                                radius: 22,
+                                                lineWidth: 3,
+                                                percent: item.voteAverage / 10,
+                                                center: Text(
+                                                  '${(item.voteAverage * 10).toStringAsFixed(0)}%',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                progressColor:
+                                                    item.voteAverage >= 7
+                                                        ? Colors.green
+                                                        : item.voteAverage >= 4
+                                                        ? Colors.orange
+                                                        : Colors.red,
+                                                backgroundColor:
+                                                    Colors.grey.shade800,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: MovieLandDimentions.spaceXLarge,
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        item.title,
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.titleSmall,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: MovieLandDimentions.spaceXLarge),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                item.title,
-                                style: Theme.of(context).textTheme.titleSmall,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
+                                  SizedBox(
+                                    height: MovieLandDimentions.spaceSmall,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      DatetimeConverter()
+                                          .convertToHumanReadable(
+                                            item.releaseDate,
+                                          ),
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                          SizedBox(height: MovieLandDimentions.spaceSmall),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              DatetimeConverter().convertToHumanReadable(
-                                item.releaseDate,
-                              ),
-                              style: Theme.of(context).textTheme.bodySmall,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                          ),
-                        ],
                       ),
                     ),
               ),
             ),
+          ),
+        ],
       ),
     );
   }

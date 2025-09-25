@@ -7,7 +7,7 @@ class MovieModel {
   final String originalTitle;
   final String overview;
   final double popularity;
-  final String posterPath;
+  final String? posterPath;
   final String releaseDate;
   final String title;
   final bool video;
@@ -41,7 +41,7 @@ class MovieModel {
       originalTitle: json['original_title'] as String,
       overview: json['overview'] as String,
       popularity: (json['popularity'] as num).toDouble(),
-      posterPath: json['poster_path'] as String,
+      posterPath: json['poster_path'] as String?,
       releaseDate: json['release_date'] as String,
       title: json['title'] as String,
       video: json['video'] as bool,
