@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:movie_land/data/models/movie_detail_model.dart';
 import 'package:movie_land/data/models/movie_model.dart';
 import 'package:movie_land/data/services/movie_lists_api.dart';
 
@@ -8,6 +9,7 @@ abstract class MovieListRepository {
   Future<void> saveToFavorite(MovieModel movie);
   Future<List<MovieModel>?> getFavoriteMovies();
   Future<void> remove(int movieId);
+  Future<MovieDetailModel> getMovieDetail(String movieId);
 }
 
 class MovieListRepositoryImp implements MovieListRepository {
@@ -47,4 +49,8 @@ class MovieListRepositoryImp implements MovieListRepository {
     await _openBoxIfNeeded();
     await favoriteMoviesBox?.delete(movieId);
   }
+
+  @override
+  Future<MovieDetailModel> getMovieDetail(String movieId) async =>
+      api.getMovieDetail(movieId);
 }

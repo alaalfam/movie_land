@@ -4,7 +4,10 @@ class DatetimeConverter {
   String convertToReadableDate(String dateString) {
     try {
       final dateTime = DateTime.parse(dateString);
-      return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+      final day = dateTime.day.toString().padLeft(2, '0');
+      final month = dateTime.month.toString().padLeft(2, '0');
+      final year = dateTime.year.toString();
+      return '$day/$month/$year';
     } catch (e) {
       return dateString; // Return the original string if parsing fails
     }
