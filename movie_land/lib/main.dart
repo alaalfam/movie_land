@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:movie_land/core/db/my_hive.dart';
 import 'package:movie_land/presentation/views/dashboard_page.dart';
 import 'package:movie_land/presentation/views/favorite_movies_page.dart';
+import 'package:movie_land/presentation/views/movie_detail_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,13 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/favorite_movies',
       builder: (context, state) => const FavoriteMoviesPage(),
+    ),
+    GoRoute(
+      path: '/movie_detail',
+      name: '/movie_detail',
+      builder:
+          (context, state) =>
+              MovieDetailPage(id: state.uri.queryParameters['id'] ?? '-1'),
     ),
   ],
 );

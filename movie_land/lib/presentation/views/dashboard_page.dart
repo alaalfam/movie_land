@@ -84,6 +84,9 @@ class _DashboardPage extends StatelessWidget {
                             (context, item, index) => MovieCart(
                               item: item,
                               addToFavorite: read.addToFavorite,
+                              onTap:
+                                  () =>
+                                      read.goToMovieDetail(item.id.toString()),
                             ),
                       ),
                     ),

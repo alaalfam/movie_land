@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:movie_land/core/utils/error_handler.dart';
 import 'package:movie_land/data/models/movie_model.dart';
 import 'package:movie_land/data/repositories/movie_list_repository.dart';
-import 'package:go_router/go_router.dart';
 
 class DashboardViewModel extends ChangeNotifier {
   final MovieListRepositoryImp movieRepository;
@@ -67,6 +66,10 @@ class DashboardViewModel extends ChangeNotifier {
   void onSearchChanged(String query) {
     searchQuery = query;
     refreshPage();
+  }
+
+  void goToMovieDetail(String movieId) {
+    context.pushNamed('/movie_detail', queryParameters: {'id': movieId});
   }
 
   @override
