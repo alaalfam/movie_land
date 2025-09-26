@@ -2,11 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_land/core/db/my_hive.dart';
 import 'package:movie_land/presentation/views/dashboard_page.dart';
+import 'package:movie_land/presentation/views/favorite_movies_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
+  await MyHive.initializeHive();
   runApp(const MyApp());
 }
 
@@ -30,5 +33,9 @@ final GoRouter _router = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(path: '/', builder: (context, state) => const DashboardPage()),
+    GoRoute(
+      path: '/favorite_movies',
+      builder: (context, state) => const FavoriteMoviesPage(),
+    ),
   ],
 );
